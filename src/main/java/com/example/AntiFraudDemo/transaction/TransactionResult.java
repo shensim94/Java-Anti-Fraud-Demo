@@ -1,4 +1,4 @@
-package com.example.AntiFraudDemo.model;
+package com.example.AntiFraudDemo.transaction;
 
 public class TransactionResult {
     private String result;
