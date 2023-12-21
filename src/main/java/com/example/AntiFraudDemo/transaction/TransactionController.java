@@ -1,18 +1,18 @@
-package com.example.AntiFraudDemo.controller;
+package com.example.AntiFraudDemo.transaction;
 
-import com.example.AntiFraudDemo.model.TransactionResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api/antifraud")
 public class TransactionController {
-    @PostMapping(path = "/api/antifraud/transaction")
+    @PostMapping("/transaction")
     public ResponseEntity<TransactionResult>getTransactionResult(@RequestBody Map<String, Long> payload) {
         if (payload == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
