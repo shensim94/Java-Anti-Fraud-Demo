@@ -1,4 +1,4 @@
-package antifraud.config;
+package com.example.AntiFraudDemo.config;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

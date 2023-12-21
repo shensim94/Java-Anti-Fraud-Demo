@@ -1,4 +1,4 @@
-package antifraud.config;
+package com.example.AntiFraudDemo.config;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
