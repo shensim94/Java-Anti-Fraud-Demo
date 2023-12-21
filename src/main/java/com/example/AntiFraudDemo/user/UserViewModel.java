@@ -1,4 +1,4 @@
-package antifraud.user;
+package com.example.AntiFraudDemo.user;
 
 public class UserViewModel {
     private Long id;
