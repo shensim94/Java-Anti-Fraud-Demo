@@ -1,5 +1,4 @@
 package com.example.AntiFraudDemo.user;
-
 import jakarta.persistence.*;
 
 @Entity
