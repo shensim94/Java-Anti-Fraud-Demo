@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<UserViewModel> register(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<UserViewModel> register(@RequestBody UserRegistrationRequest request) {
         if (Strings.isBlank(request.name()) || Strings.isBlank(request.username()) || Strings.isBlank(request.password())) {
             System.out.println("Bad request here");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -62,5 +62,4 @@ public class UserController {
 
     }
 
-    record RegistrationRequest(String name, String username, String password) { }
 }
