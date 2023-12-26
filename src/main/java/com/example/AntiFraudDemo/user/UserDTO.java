@@ -7,10 +7,13 @@ public class UserDTO{
 
     private String username;
 
+    private String roles;
+
     public UserDTO(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.username = user.getUsername();
+        this.roles = user.getRoles();
     }
 
     public Long getId() {
@@ -24,4 +27,6 @@ public class UserDTO{
     public String getUsername() {
         return username;
     }
+
+    public String getRoles() { return roles; }
 }

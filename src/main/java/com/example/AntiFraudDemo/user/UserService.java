@@ -1,7 +1,6 @@
 package com.example.AntiFraudDemo.user;
 
 import com.example.AntiFraudDemo.exception.ApiRequestException;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +20,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User addUser(UserRegistrationRequest request){
+    public UserDTO addUser(UserRegistrationRequest request){
         if (userRepository.findByUsernameIgnoreCase(request.username()).isPresent()) {
             throw new ApiRequestException("user is already present", HttpStatus.CONFLICT);
         }
@@ -31,26 +30,24 @@ public class UserService {
             user.setRoles("ROLE_ADMINISTRATOR");
         }
         userRepository.save(user);
-        return user;
+        return new UserDTO(user);
     }
 
-    public ResponseEntity<Iterable<UserDTO>> getAllUsers() {
+    public Iterable<UserDTO> getAllUsers() {
         Iterable<User> allUsers = userRepository.findAll();
         ArrayList<UserDTO> allUsersDTO= new ArrayList<>();
         for (User user: allUsers) {
             allUsersDTO.add(new UserDTO(user));
         }
-        return new ResponseEntity<>(allUsersDTO, HttpStatus.OK);
+        return allUsersDTO;
     }
 
-    public ResponseEntity<Map<String, String>> deleteUser(String username) {
+    public Boolean deleteUser(String username) {
         Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
         if (user.isPresent()) {
             userRepository.delete(user.get());
-            return new ResponseEntity<>(
-                    Map.of("username", user.get().getUsername(), "status", "Deleted successfully!"),
-                    HttpStatus.OK);
+            return true;
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return false;
     }
 }

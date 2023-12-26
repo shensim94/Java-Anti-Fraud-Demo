@@ -56,20 +56,8 @@ public class User {
         this.password = password;
     }
 
-    public String getRoles() {
-        return roles;
-    }
+    public String getRoles() { return roles; }
 
-    public void setRoles(String roles) {
-        this.roles = roles;
-    }
+    public void setRoles(String roles) { this.roles = roles; }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", username='" + username + '\'' +
-                '}';
-    }
 }

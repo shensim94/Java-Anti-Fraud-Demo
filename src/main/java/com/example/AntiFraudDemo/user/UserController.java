@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,7 +21,7 @@ public class UserController {
 
     @GetMapping("/list")
     public ResponseEntity<Iterable<UserDTO>> getUsers() {
-        return userService.getAllUsers();
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @PostMapping("/user")
@@ -30,14 +29,17 @@ public class UserController {
         if (Strings.isBlank(request.name()) || Strings.isBlank(request.username()) || Strings.isBlank(request.password())) {
             throw new ApiRequestException("request is missing required fields", HttpStatus.BAD_REQUEST);
         }
-        User user = userService.addUser(request);
-        return new ResponseEntity<>(new UserDTO(user), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.addUser(request), HttpStatus.CREATED);
 
     }
 
     @DeleteMapping("/user/{username}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable String username) {
-        return userService.deleteUser(username);
+        if (userService.deleteUser(username)) {
+            return new ResponseEntity<>(
+                    Map.of("username", username, "status", "Deleted successfully!"),
+                    HttpStatus.OK);
+        };
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 }
