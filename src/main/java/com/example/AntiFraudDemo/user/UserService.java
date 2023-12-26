@@ -5,11 +5,13 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
+@Service
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -19,16 +21,17 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<UserDTO> addUser(UserRegistrationRequest request) throws ApiRequestException {
-        if (Strings.isBlank(request.name()) || Strings.isBlank(request.username()) || Strings.isBlank(request.password())) {
-            throw new ApiRequestException("request is missing required fields", HttpStatus.BAD_REQUEST);
-        }
+    public User addUser(UserRegistrationRequest request){
         if (userRepository.findByUsernameIgnoreCase(request.username()).isPresent()) {
             throw new ApiRequestException("user is already present", HttpStatus.CONFLICT);
         }
         User user = new User(request.name(), request.username(), passwordEncoder.encode(request.password()));
+        ArrayList<User> allUsers = (ArrayList<User>) userRepository.findAll();
+        if (allUsers.isEmpty()) {
+            user.setRoles("ROLE_ADMINISTRATOR");
+        }
         userRepository.save(user);
-        return new ResponseEntity<>(new UserDTO(user), HttpStatus.CREATED);
+        return user;
     }
 
     public ResponseEntity<Iterable<UserDTO>> getAllUsers() {

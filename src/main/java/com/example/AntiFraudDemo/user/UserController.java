@@ -1,11 +1,11 @@
 package com.example.AntiFraudDemo.user;
 
+import com.example.AntiFraudDemo.exception.ApiRequestException;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,44 +13,31 @@ import java.util.Optional;
 @RequestMapping("/api/auth")
 public class UserController {
 
-    private final UserRepository users;
+    private final UserService userService;
 
-    private final UserDetailsServiceImpl userDetailsService;
-    private final PasswordEncoder passwordEncoder;
-
-    public UserController(UserRepository users, UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder) {
-        this.users = users;
-        this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
+
 
     @GetMapping("/list")
     public ResponseEntity<Iterable<UserDTO>> getUsers() {
-        Iterable<User> allUsers = users.findAll();
-        ArrayList<UserDTO> allUsersView = new ArrayList<>();
-        for (User user: allUsers) {
-            allUsersView.add(new UserDTO(user));
-        }
-        return new ResponseEntity<>(allUsersView, HttpStatus.OK);
+        return userService.getAllUsers();
     }
 
     @PostMapping("/user")
     public ResponseEntity<UserDTO> register(@RequestBody UserRegistrationRequest request) {
-
-        return userDetailsService.addUser(request);
+        if (Strings.isBlank(request.name()) || Strings.isBlank(request.username()) || Strings.isBlank(request.password())) {
+            throw new ApiRequestException("request is missing required fields", HttpStatus.BAD_REQUEST);
+        }
+        User user = userService.addUser(request);
+        return new ResponseEntity<>(new UserDTO(user), HttpStatus.CREATED);
 
     }
 
     @DeleteMapping("/user/{username}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable String username) {
-        System.out.println(username);
-        Optional<User> user = users.findByUsernameIgnoreCase(username);
-        if (user.isPresent()) {
-            users.delete(user.get());
-            return new ResponseEntity<>(Map.of("username", user.get().getUsername(), "status", "Deleted successfully!"), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+        return userService.deleteUser(username);
     }
 
 }
