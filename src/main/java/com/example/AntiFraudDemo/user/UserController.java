@@ -30,7 +30,6 @@ public class UserController {
             throw new ApiRequestException("request is missing required fields", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(userService.addUser(request), HttpStatus.CREATED);
-
     }
 
     @DeleteMapping("/user/{username}")
