@@ -18,11 +18,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl) {
-        this.userDetailsServiceImpl = userDetailsServiceImpl;
-    }
+    public SecurityConfig() {}
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -39,7 +36,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/auth/user/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/antifraud/transaction").authenticated()
                         .requestMatchers("/actuator/shutdown").permitAll())
-                .userDetailsService(userDetailsServiceImpl)
                 .httpBasic(Customizer.withDefaults())
                 .csrf(configurer -> configurer.disable())// Default Basic auth com.example.userdemo.config
                 .sessionManagement(session -> session
