@@ -1,13 +1,13 @@
 package com.example.AntiFraudDemo.user;
 
-public class UserViewModel {
+public class UserDTO{
     private Long id;
 
     private String name;
 
     private String username;
 
-    public UserViewModel(User user) {
+    public UserDTO(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.username = user.getUsername();
