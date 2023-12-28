@@ -19,31 +19,31 @@ public class AuthService {
     }
     @Transactional
     public void updateAccess(String username, String operation) {
+
         User user = userService.getUserByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Username not found: " + username));
         if (user.getRole().equals("ADMINISTRATOR")) {
             throw new BadRequestException("cannot perform this operation on an Admin");
         }
-        if (operation.equals("UNLOCK") && user.isUnlocked()) {
-            throw new ResourceAlreadyExistException(username + " is already unlocked");
+        boolean alreadyUnlocked = operation.equals("UNLOCK") && user.isUnlocked();
+        boolean alreadyLocked = operation.equals("LOCK") && !user.isUnlocked();
+        if (!alreadyLocked && !alreadyUnlocked) {
+            user.setUnlocked(operation.equals("UNLOCK"));
         }
-        if (operation.equals("LOCK") && !user.isUnlocked()) {
-            throw new ResourceAlreadyExistException(username + " is already locked");
-        }
-        user.setUnlocked(operation.equals("UNLOCK"));
     }
 
     @Transactional
     public UserDTO updateRole(String username, String role) {
+
         User user = userService.getUserByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Username not found: " + username));
 
+        // really should return 200 if role already exist, but HyperSkill wants me to throw an exception here
         if (user.getRole().equals(role)) {
             throw new ResourceAlreadyExistException("user already has role: " + role);
         }
         user.setRole(role);
         userService.saveUser(user);
         return new UserDTO(user);
-
     }
 }
