@@ -1,17 +1,26 @@
 package com.example.AntiFraudDemo.user;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "users")
 public class User {
+
+    @Valid
+
+
     @Id
     @GeneratedValue
     private Long id;
 
+    @NotBlank(message = "name is required")
     private String name;
 
+    @NotBlank(message = "username/email is required")
     private String username;
 
+    @NotBlank(message = "password is required")
     private String password;
 
     private String roles;
