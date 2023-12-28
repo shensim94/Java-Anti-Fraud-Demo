@@ -23,7 +23,9 @@ public class User {
     @NotBlank(message = "password is required")
     private String password;
 
-    private String roles;
+    private String role;
+
+    private Boolean unlocked = false;
 
     public User() {}
 
@@ -65,8 +67,12 @@ public class User {
         this.password = password;
     }
 
-    public String getRoles() { return roles; }
+    public String getRole() { return role; }
 
-    public void setRoles(String roles) { this.roles = roles; }
+    public void setRole(String role) { this.role = role; }
+
+    public Boolean isUnlocked() { return unlocked; }
+
+    public void setUnlocked(Boolean unlocked) { this.unlocked = unlocked; }
 
 }

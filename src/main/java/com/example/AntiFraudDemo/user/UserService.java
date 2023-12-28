@@ -19,29 +19,8 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Boolean hasUser(String username) {
-        return userRepository.findByUsernameIgnoreCase(username).isPresent();
-    }
-
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsernameIgnoreCase(username);
-    }
-
-    public void saveUser(User user) {
-        userRepository.save(user);
-    }
-
-    public UserDTO addUser(String name, String username, String password){
-        if (hasUser(username)) {
-            throw new ResourceAlreadyExistException("user is already present");
-        }
-        User user = new User(name, username, passwordEncoder.encode(password));
-        ArrayList<User> allUsers = (ArrayList<User>) userRepository.findAll();
-        if (allUsers.isEmpty()) {
-            user.setRoles("ROLE_ADMINISTRATOR");
-        }
-        saveUser(user);
-        return new UserDTO(user);
     }
 
     public Iterable<UserDTO> getAllUsers() {
@@ -51,6 +30,33 @@ public class UserService {
             allUsersDTO.add(new UserDTO(user));
         }
         return allUsersDTO;
+    }
+
+    public Boolean hasUser(String username) {
+        return getUserByUsername(username).isPresent();
+    }
+
+    @Transactional
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+
+    @Transactional
+    public UserDTO addUser(String name, String username, String password){
+        if (hasUser(username)) {
+            throw new ResourceAlreadyExistException("user is already present");
+        }
+        User user = new User(name, username, passwordEncoder.encode(password));
+        ArrayList<User> allUsers = (ArrayList<User>) userRepository.findAll();
+        if (allUsers.isEmpty()) {
+            user.setRole("ADMINISTRATOR");
+            user.setUnlocked(true);
+        } else {
+            user.setRole("MERCHANT");
+        }
+        saveUser(user);
+        return new UserDTO(user);
     }
 
     @Transactional

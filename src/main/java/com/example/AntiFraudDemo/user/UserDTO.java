@@ -13,7 +13,7 @@ public class UserDTO{
         this.id = user.getId();
         this.name = user.getName();
         this.username = user.getUsername();
-        this.roles = user.getRoles();
+        this.roles = user.getRole();
     }
 
     public Long getId() {

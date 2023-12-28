@@ -22,7 +22,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(user.getRoles().split(","))
+        return Arrays.stream(user.getRole().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .toList();
     }
@@ -39,7 +39,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.isUnlocked();
     }
 
     @Override
