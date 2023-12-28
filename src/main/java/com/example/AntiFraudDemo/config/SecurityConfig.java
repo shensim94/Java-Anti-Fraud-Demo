@@ -40,7 +40,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/antifraud/transaction").hasRole("MERCHANT")
                         .requestMatchers(HttpMethod.PUT, "/api/auth/access").hasRole("ADMINISTRATOR")
                         .requestMatchers(HttpMethod.PUT, "/api/auth/role").hasRole("ADMINISTRATOR")
-                        .requestMatchers("/actuator/shutdown").permitAll())
+                        .requestMatchers("/actuator/shutdown").permitAll()
+                        .anyRequest().denyAll())
                 .httpBasic(Customizer.withDefaults())
                 .csrf(configurer -> configurer.disable())// Default Basic auth com.example.userdemo.config
                 .sessionManagement(session -> session

@@ -1,6 +1,5 @@
 package com.example.AntiFraudDemo.user;
 
-import com.example.AntiFraudDemo.exception.ApiRequestException;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
