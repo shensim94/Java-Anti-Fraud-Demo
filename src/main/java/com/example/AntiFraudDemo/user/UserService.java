@@ -1,13 +1,12 @@
 package com.example.AntiFraudDemo.user;
 
-import com.example.AntiFraudDemo.exception.ApiRequestException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.example.AntiFraudDemo.exception.ResourceAlreadyExistException;
+import com.example.AntiFraudDemo.exception.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,16 +19,28 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDTO addUser(UserRegistrationRequest request){
-        if (userRepository.findByUsernameIgnoreCase(request.username()).isPresent()) {
-            throw new ApiRequestException("user is already present", HttpStatus.CONFLICT);
+    public Boolean hasUser(String username) {
+        return userRepository.findByUsernameIgnoreCase(username).isPresent();
+    }
+
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsernameIgnoreCase(username);
+    }
+
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+    public UserDTO addUser(String name, String username, String password){
+        if (hasUser(username)) {
+            throw new ResourceAlreadyExistException("user is already present");
         }
-        User user = new User(request.name(), request.username(), passwordEncoder.encode(request.password()));
+        User user = new User(name, username, passwordEncoder.encode(password));
         ArrayList<User> allUsers = (ArrayList<User>) userRepository.findAll();
         if (allUsers.isEmpty()) {
             user.setRoles("ROLE_ADMINISTRATOR");
         }
-        userRepository.save(user);
+        saveUser(user);
         return new UserDTO(user);
     }
 
@@ -42,12 +53,13 @@ public class UserService {
         return allUsersDTO;
     }
 
-    public Boolean deleteUser(String username) {
+    @Transactional
+    public void deleteUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
         if (user.isPresent()) {
             userRepository.delete(user.get());
-            return true;
+        } else {
+            throw new ResourceNotFoundException("Username not found: " + username);
         }
-        return false;
     }
 }
