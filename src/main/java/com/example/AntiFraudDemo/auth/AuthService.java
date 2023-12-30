@@ -20,8 +20,7 @@ public class AuthService {
     @Transactional
     public void updateAccess(String username, String operation) {
 
-        User user = userService.getUserByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Username not found: " + username));
+        User user = userService.getUserByUsername(username);
         if (user.getRole().equals("ADMINISTRATOR")) {
             throw new BadRequestException("cannot perform this operation on an Admin");
         }
@@ -35,8 +34,7 @@ public class AuthService {
     @Transactional
     public UserDTO updateRole(String username, String role) {
 
-        User user = userService.getUserByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Username not found: " + username));
+        User user = userService.getUserByUsername(username);
 
         // really should return 200 if role already exist, but HyperSkill wants me to throw an exception here
         if (user.getRole().equals(role)) {

@@ -1,5 +1,6 @@
 package com.example.AntiFraudDemo.exception;
 
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
@@ -44,6 +46,19 @@ public class ApiExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+        errors.put("timeStamp", String.valueOf(ZonedDateTime.now(ZoneId.of("Z"))));
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationExceptions(ConstraintViolationException e) {
+
+        Map<String, String> errors = new HashMap<>();
+        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+        for (ConstraintViolation<?> violation : constraintViolations) {
+            String errorMessage = violation.getMessage();
+            errors.put("message", errorMessage);
+        }
         errors.put("timeStamp", String.valueOf(ZonedDateTime.now(ZoneId.of("Z"))));
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }

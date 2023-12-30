@@ -19,8 +19,9 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsernameIgnoreCase(username);
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsernameIgnoreCase(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Username not found: " + username));
     }
 
     public Iterable<UserDTO> getAllUsers() {
@@ -33,7 +34,7 @@ public class UserService {
     }
 
     public Boolean hasUser(String username) {
-        return getUserByUsername(username).isPresent();
+        return userRepository.findByUsernameIgnoreCase(username).isPresent();
     }
 
     @Transactional
@@ -41,9 +42,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-
     @Transactional
-    public UserDTO addUser(String name, String username, String password){
+    public UserDTO addUser(String name, String username, String password) {
         if (hasUser(username)) {
             throw new ResourceAlreadyExistException("user is already present");
         }
@@ -61,11 +61,6 @@ public class UserService {
 
     @Transactional
     public void deleteUserByUsername(String username) {
-        Optional<User> user = userRepository.findByUsernameIgnoreCase(username);
-        if (user.isPresent()) {
-            userRepository.delete(user.get());
-        } else {
-            throw new ResourceNotFoundException("Username not found: " + username);
-        }
+        userRepository.delete(getUserByUsername(username));
     }
 }

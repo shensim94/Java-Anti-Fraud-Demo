@@ -18,7 +18,6 @@ public class UserController {
         this.userService = userService;
     }
 
-
     @GetMapping("/list")
     public ResponseEntity<Iterable<UserDTO>> getUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
@@ -26,19 +25,16 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity<UserDTO> register(@Valid @RequestBody User user) {
-
         UserDTO userDTO = userService.addUser(user.getName(), user.getUsername(), user.getPassword());
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/user/{username}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable String username) {
-
         // throws ResourceNotFoundException in the service layer
         userService.deleteUserByUsername(username);
         return new ResponseEntity<>(
                 Map.of("username", username, "status", "Deleted successfully!"),
                 HttpStatus.OK);
-
     }
 }
