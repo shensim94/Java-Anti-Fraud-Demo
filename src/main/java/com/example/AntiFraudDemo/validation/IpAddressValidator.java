@@ -8,6 +8,10 @@ public class IpAddressValidator implements ConstraintValidator<ValidIpAddress, S
 
     @Override
     public boolean isValid(String ipAddress, ConstraintValidatorContext context) {
+        // check for null and blank;
+        if (ipAddress == null || ipAddress.isBlank()) {
+            return false;
+        }
         String ipv4Pattern = "^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$";
         return ipAddress.matches(ipv4Pattern);
     }
