@@ -40,6 +40,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/antifraud/transaction").hasAuthority("MERCHANT")
                         .requestMatchers(HttpMethod.PUT, "/api/auth/access").hasAuthority("ADMINISTRATOR")
                         .requestMatchers(HttpMethod.PUT, "/api/auth/role").hasAuthority("ADMINISTRATOR")
+                        .requestMatchers(HttpMethod.GET, "/api/antifraud/suspicious-ip").hasAuthority("SUPPORT")
+                        .requestMatchers(HttpMethod.POST, "/api/antifraud/suspicious-ip").hasAuthority("SUPPORT")
+                        .requestMatchers(HttpMethod.DELETE, "/api/antifraud/suspicious-ip/**").hasAuthority("SUPPORT")
+                        .requestMatchers(HttpMethod.GET, "/api/antifraud/stolencard").hasAuthority("SUPPORT")
+                        .requestMatchers(HttpMethod.POST, "/api/antifraud/stolencard").hasAuthority("SUPPORT")
+                        .requestMatchers(HttpMethod.DELETE, "/api/antifraud/stolencard/**").hasAuthority("SUPPORT")
                         .requestMatchers("/actuator/shutdown").permitAll()
                         .anyRequest().denyAll())
                 .httpBasic(Customizer.withDefaults())
@@ -48,7 +54,6 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no session
                 )
                 .build();// for POST requests via Postman;
-
     }
 
     @Bean
