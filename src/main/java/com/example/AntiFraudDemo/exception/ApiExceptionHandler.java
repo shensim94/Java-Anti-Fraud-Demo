@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -39,6 +40,19 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException e) {
+        // Create payload containing exception details
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        errors.put("timeStamp", String.valueOf(ZonedDateTime.now(ZoneId.of("Z"))));
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = BindException.class)
+    public ResponseEntity<Object> handleBindExceptions(BindException e) {
         // Create payload containing exception details
         Map<String, String> errors = new HashMap<>();
         e.getBindingResult().getAllErrors().forEach((error) -> {
