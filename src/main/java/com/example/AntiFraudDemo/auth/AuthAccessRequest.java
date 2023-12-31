@@ -12,6 +12,9 @@ public class AuthAccessRequest {
     @Pattern(regexp = "LOCK|UNLOCK")
     private String operation;
 
+    public AuthAccessRequest() {
+    }
+
     public AuthAccessRequest(String username, String operation) {
         this.username = username;
         this.operation = operation;

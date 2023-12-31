@@ -6,11 +6,14 @@ import jakarta.validation.constraints.Pattern;
 public class AuthRoleRequest {
 
     @NotBlank(message = "username is required")
-    private final String username;
+    private String username;
 
     @NotBlank(message = "role is required")
     @Pattern(regexp = "MERCHANT|SUPPORT")
-    private final String role;
+    private String role;
+
+    public AuthRoleRequest() {
+    }
 
     public AuthRoleRequest(String username, String role) {
         this.username = username;
@@ -23,4 +26,11 @@ public class AuthRoleRequest {
         return role;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
