@@ -8,4 +8,6 @@ import java.util.Optional;
 @Repository
 public interface IpAddressRepository extends CrudRepository<IpAddress, Long> {
     Optional<IpAddress> findByIp(String IpAddress);
+
+    Iterable<IpAddress> findAllByOrderByIdAsc();
 }

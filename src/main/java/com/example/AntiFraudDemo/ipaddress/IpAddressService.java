@@ -16,6 +16,10 @@ public class IpAddressService {
         return ipAddressRepository.findByIp(ipAddress).isPresent();
     }
 
+    public Iterable<IpAddress> getAllIpAddresses() {
+        return ipAddressRepository.findAllByOrderByIdAsc();
+    }
+
     public IpAddress getByIpAddress(String ipAddress) {
         return ipAddressRepository.findByIp(ipAddress).orElseThrow(() -> new ResourceNotFoundException("ip address not found: " + ipAddress));
     }

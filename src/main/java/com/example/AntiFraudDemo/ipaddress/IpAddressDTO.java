@@ -8,6 +8,7 @@ public class IpAddressDTO {
     @ValidIpAddress
     private String ip;
 
+    // a no-arg constructor is required for the controller
     public IpAddressDTO() {}
 
     public IpAddressDTO(String ip) {

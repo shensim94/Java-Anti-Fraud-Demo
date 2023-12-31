@@ -10,13 +10,17 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/antifraud")
-@Validated
 public class IpAddressController {
 
     private IpAddressService ipAddressService;
 
     public IpAddressController(IpAddressService ipAddressService) {
         this.ipAddressService = ipAddressService;
+    }
+
+    @GetMapping("/suspicious-ip")
+    public ResponseEntity<Iterable<IpAddress>> getAllSuspiciouIp() {
+        return new ResponseEntity<>(ipAddressService.getAllIpAddresses(), HttpStatus.OK);
     }
 
     @PostMapping("/suspicious-ip")
@@ -29,7 +33,7 @@ public class IpAddressController {
     /***
      * note for future self, spring automatically maps the path variable "ip" to the
      * DTO object's ip property which means it's important for both the name in the
-     * path variable and the property in the DTO to be identical,
+     * path variable and the property in the DTO to be identical, the dt
      * @param dto
      * @return ResponseEntity
      */
