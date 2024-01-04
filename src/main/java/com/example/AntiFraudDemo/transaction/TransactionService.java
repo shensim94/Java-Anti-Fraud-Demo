@@ -2,10 +2,15 @@ package com.example.AntiFraudDemo.transaction;
 
 import com.example.AntiFraudDemo.creditcard.CreditCardService;
 import com.example.AntiFraudDemo.ipaddress.IpAddressService;
+import com.example.AntiFraudDemo.transaction.rules.AmountRule;
+import com.example.AntiFraudDemo.transaction.rules.CreditCardRule;
+import com.example.AntiFraudDemo.transaction.rules.IpAddressRule;
+import com.example.AntiFraudDemo.transaction.rules.TransactionRule;
 import com.example.AntiFraudDemo.util.Util;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -19,7 +24,46 @@ public class TransactionService {
         this.creditCardService = creditCardService;
     }
 
+    //TODO: refactor this
     public TransactionResponse processTransaction(TransactionDTO dto) {
+        List<TransactionRule> rules = Arrays.asList(
+                new AmountRule(),
+                new CreditCardRule(creditCardService),  // Provide necessary dependencies
+                new IpAddressRule(ipAddressService)      // Provide necessary dependencies
+        );
+        boolean transactionProhibited = false;
+        boolean manualProcessing = false;
+        List<String> info = new ArrayList<>();
+
+
+        for (TransactionRule rule : rules) {
+            if (rule.isProhibited(dto)) {
+                info.add(rule.getInfo());
+                transactionProhibited = true;
+            }
+        }
+
+        if (!transactionProhibited) {
+            for (TransactionRule rule : rules) {
+                if (rule.isManual(dto)) {
+                    info.add(rule.getInfo());
+                    manualProcessing = true;
+                }
+            }
+        }
+
+        String transactionInfo = info.isEmpty() ? "none" : Util.constructString(info);
+
+        if (info.isEmpty()) {
+            return new TransactionResponse("ALLOWED", transactionInfo);
+        } else if (manualProcessing) {
+            return new TransactionResponse("MANUAL_PROCESSING", transactionInfo);
+        } else {
+            return new TransactionResponse("PROHIBITED", transactionInfo);
+        }
+    }
+
+    public TransactionResponse oldProcessTransaction(TransactionDTO dto) {
         boolean allowedAmount = dto.getAmount() <= 200;
         boolean manualAmount = 200 < dto.getAmount() && dto.getAmount() <= 1500;
         boolean excessAmount = dto.getAmount() > 1500;
