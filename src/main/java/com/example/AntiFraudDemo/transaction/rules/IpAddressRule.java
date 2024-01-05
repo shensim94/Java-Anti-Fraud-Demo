@@ -11,13 +11,13 @@ public class IpAddressRule implements TransactionRule {
     }
 
     @Override
-    public boolean isManual(Transaction dto) {
+    public boolean isManual(Transaction transaction) {
         return false;
     }
 
     @Override
-    public boolean isProhibited(Transaction dto) {
-        return ipAddressService.hasIpAddress(dto.getIp());
+    public boolean isProhibited(Transaction transaction) {
+        return ipAddressService.hasIpAddress(transaction.getIp());
     }
 
     @Override

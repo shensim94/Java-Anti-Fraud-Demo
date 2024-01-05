@@ -2,10 +2,7 @@ package com.example.AntiFraudDemo.transaction;
 
 import com.example.AntiFraudDemo.creditcard.CreditCardService;
 import com.example.AntiFraudDemo.ipaddress.IpAddressService;
-import com.example.AntiFraudDemo.transaction.rules.AmountRule;
-import com.example.AntiFraudDemo.transaction.rules.CreditCardRule;
-import com.example.AntiFraudDemo.transaction.rules.IpAddressRule;
-import com.example.AntiFraudDemo.transaction.rules.TransactionRule;
+import com.example.AntiFraudDemo.transaction.rules.*;
 import com.example.AntiFraudDemo.util.Util;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +33,14 @@ public class TransactionService {
     }
 
     //TODO: refactor this
-    public TransactionResponse processTransaction(Transaction dto) {
-        saveTransaction(dto);
+    public TransactionResponse processTransaction(Transaction transaction) {
+        saveTransaction(transaction);
         List<TransactionRule> rules = Arrays.asList(
                 new AmountRule(),
                 new CreditCardRule(creditCardService),  // Provide necessary dependencies
-                new IpAddressRule(ipAddressService)      // Provide necessary dependencies
+                new IpAddressRule(ipAddressService),     // Provide necessary dependencies
+                new IpCorrelationRule(transactionRepository),
+                new RegionCorrelationRule(transactionRepository)
         );
         boolean transactionProhibited = false;
         boolean manualProcessing = false;
@@ -49,7 +48,7 @@ public class TransactionService {
 
 
         for (TransactionRule rule : rules) {
-            if (rule.isProhibited(dto)) {
+            if (rule.isProhibited(transaction)) {
                 info.add(rule.getInfo());
                 transactionProhibited = true;
             }
@@ -57,7 +56,7 @@ public class TransactionService {
 
         if (!transactionProhibited) {
             for (TransactionRule rule : rules) {
-                if (rule.isManual(dto)) {
+                if (rule.isManual(transaction)) {
                     info.add(rule.getInfo());
                     manualProcessing = true;
                 }

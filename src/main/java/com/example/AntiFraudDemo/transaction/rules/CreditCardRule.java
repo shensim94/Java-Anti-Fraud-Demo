@@ -12,13 +12,13 @@ public class CreditCardRule implements TransactionRule {
     }
 
     @Override
-    public boolean isManual(Transaction dto) {
+    public boolean isManual(Transaction transaction) {
         return false;
     }
 
     @Override
-    public boolean isProhibited(Transaction dto) {
-        return creditCardService.hasCard(dto.getNumber());
+    public boolean isProhibited(Transaction transaction) {
+        return creditCardService.hasCard(transaction.getNumber());
     }
 
     @Override

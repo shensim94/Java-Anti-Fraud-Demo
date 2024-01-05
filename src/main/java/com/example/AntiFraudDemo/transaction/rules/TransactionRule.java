@@ -3,9 +3,9 @@ package com.example.AntiFraudDemo.transaction.rules;
 import com.example.AntiFraudDemo.transaction.Transaction;
 
 public interface TransactionRule {
-    boolean isManual(Transaction dto);
+    boolean isManual(Transaction transaction);
 
-    boolean isProhibited(Transaction dto);
+    boolean isProhibited(Transaction transaction);
 
     String getInfo();
 }
