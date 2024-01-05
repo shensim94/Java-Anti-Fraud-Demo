@@ -19,13 +19,25 @@ public class TransactionService {
     private IpAddressService ipAddressService;
     private CreditCardService creditCardService;
 
-    public TransactionService(IpAddressService ipAddressService, CreditCardService creditCardService) {
+    private TransactionRepository transactionRepository;
+
+    public TransactionService(IpAddressService ipAddressService, CreditCardService creditCardService, TransactionRepository transactionRepository) {
         this.ipAddressService = ipAddressService;
         this.creditCardService = creditCardService;
+        this.transactionRepository = transactionRepository;
+    }
+
+    public Iterable<Transaction> findAll() {
+        return transactionRepository.findAll();
+    }
+
+    private void saveTransaction(Transaction transaction) {
+        transactionRepository.save(transaction);
     }
 
     //TODO: refactor this
-    public TransactionResponse processTransaction(TransactionDTO dto) {
+    public TransactionResponse processTransaction(Transaction dto) {
+        saveTransaction(dto);
         List<TransactionRule> rules = Arrays.asList(
                 new AmountRule(),
                 new CreditCardRule(creditCardService),  // Provide necessary dependencies
@@ -63,7 +75,7 @@ public class TransactionService {
         }
     }
 
-    public TransactionResponse oldProcessTransaction(TransactionDTO dto) {
+    public TransactionResponse oldProcessTransaction(Transaction dto) {
         boolean allowedAmount = dto.getAmount() <= 200;
         boolean manualAmount = 200 < dto.getAmount() && dto.getAmount() <= 1500;
         boolean excessAmount = dto.getAmount() > 1500;
