@@ -1,11 +1,11 @@
 package com.example.AntiFraudDemo.transaction.rules;
 
-import com.example.AntiFraudDemo.transaction.TransactionDTO;
+import com.example.AntiFraudDemo.transaction.Transaction;
 
 public interface TransactionRule {
-    boolean isManual(TransactionDTO dto);
+    boolean isManual(Transaction dto);
 
-    boolean isProhibited(TransactionDTO dto);
+    boolean isProhibited(Transaction dto);
 
     String getInfo();
 }
