@@ -38,6 +38,15 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(apiException, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(value = UnprocessableFeedbackException.class)
+    public ResponseEntity<Object> handleUnprocessableFeedback(UnprocessableFeedbackException e) {
+        // Create payload containing exception details
+        ApiException apiException = new ApiException(
+                e.getMessage(),
+                ZonedDateTime.now(ZoneId.of("Z")));
+        return new ResponseEntity<>(apiException, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException e) {
         // Create payload containing exception details
