@@ -2,9 +2,11 @@ package com.example.AntiFraudDemo.transaction.rules;
 
 import com.example.AntiFraudDemo.transaction.Transaction;
 import com.example.AntiFraudDemo.transaction.TransactionRepository;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@Component
 public class IpCorrelationRule implements TransactionRule{
 
     private TransactionRepository transactionRepository;

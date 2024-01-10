@@ -2,7 +2,9 @@ package com.example.AntiFraudDemo.transaction.rules;
 
 import com.example.AntiFraudDemo.ipaddress.IpAddressService;
 import com.example.AntiFraudDemo.transaction.Transaction;
+import org.springframework.stereotype.Component;
 
+@Component
 public class IpAddressRule implements TransactionRule {
     private IpAddressService ipAddressService;
 

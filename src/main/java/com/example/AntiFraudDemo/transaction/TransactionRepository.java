@@ -12,9 +12,8 @@ import java.util.Optional;
 @Repository
 public interface TransactionRepository extends CrudRepository<Transaction, Long> {
 
-    Long countDistinctByIpNot(String excludedIp);
+    Iterable<Transaction> findByNumber(String number);
 
-    Iterable<Transaction> findByIpNotAndDateBetween(String excludedIp, LocalDateTime startDate, LocalDateTime endDate);
 
 
     @Query("SELECT COUNT(DISTINCT t.ip) FROM Transaction t " +

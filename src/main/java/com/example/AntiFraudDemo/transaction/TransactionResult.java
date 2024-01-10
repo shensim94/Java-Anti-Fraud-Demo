@@ -1,13 +1,13 @@
 package com.example.AntiFraudDemo.transaction;
 
-public class TransactionResponse {
+public class TransactionResult {
     private String result;
 
     private String info;
 
-    public TransactionResponse() {}
+    public TransactionResult() {}
 
-    public TransactionResponse(String result, String info) {
+    public TransactionResult(String result, String info) {
         this.result = result;
         this.info = info;
     }

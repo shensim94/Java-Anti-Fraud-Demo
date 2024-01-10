@@ -2,8 +2,10 @@ package com.example.AntiFraudDemo.transaction.rules;
 
 import com.example.AntiFraudDemo.creditcard.CreditCardService;
 import com.example.AntiFraudDemo.transaction.Transaction;
+import org.springframework.stereotype.Component;
 
 
+@Component
 public class CreditCardRule implements TransactionRule {
     private CreditCardService creditCardService;
 
