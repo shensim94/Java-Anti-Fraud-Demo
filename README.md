@@ -1,3 +1,7 @@
-Spring Boot implementation of a simple anti fraud system
-*all relevant code are located in src/main
+# Spring Boot "Anti-Fraud-System" learning project
+
+This is a Spring Boot(ver 3.2.0) service for validating transactions based on a simple and arbitrary set of rules.
+
+
+
 
