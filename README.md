@@ -9,6 +9,4 @@ Heuristics consider properties such as transactions limits, transaction frequenc
 roles can override any types of transaction.
 
 ## Requirements
-
-
-
+JDK 17 or later.
