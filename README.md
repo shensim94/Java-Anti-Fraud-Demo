@@ -8,6 +8,7 @@ request, which can be evaluated to ALLOWED, PROHIBITED, or MANUAL PROCESSING dep
 Heuristics consider properties such as transactions limits, transaction frequency, region, etc. Users with SUPPORT 
 roles can override any types of transaction.
 
-## Technologies
+## Requirements
+
 
 
