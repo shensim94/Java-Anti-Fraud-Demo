@@ -1,0 +1,47 @@
+version: "3.1"
+services:
+  postgres-db:
+    image: postgres
+    container_name: anti-fraud-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    env_file:
+      - .env
+    volumes:
+      - anti-fraud-data:/var/lib/postgresql/data
+    networks:
+      - anti-fraud-manager-network
+
+  anti-fraud-service:
+    build: {'context': '.', 'dockerfile': 'Dockerfile'}
+    container_name: anti-fraud-manager
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/${POSTGRES_DB}
+    env_file:
+      - .env
+    networks:
+      - anti-fraud-manager-network
+    depends_on:
+      - postgres-db
+
+  adminer:
+    image: adminer
+    container_name: anti-fraud-adminer
+    ports:
+      - "8080:8080"
+    networks:
+      anti-fraud-manager-network:
+
+volumes:
+  anti-fraud-data:
+
+networks:
+  anti-fraud-manager-network:
